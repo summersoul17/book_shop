@@ -11,7 +11,6 @@
 
 ### authors
 
-## Endpoints:
 1. `GET /api/authors` - список книг
 2. `GET /api/authors/{author_id}` - выдать информацию по конкретной книге
 3. `POST /api/authors` - создание книги
