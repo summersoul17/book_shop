@@ -15,7 +15,9 @@ logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/api/authors", tags=["authors"])
 
 
-@router.get("/", response_model=List[AuthorCreateResponse], summary="Получить список авторов",
+@router.get("/",
+            response_model=List[AuthorCreateResponse],
+            summary="Получить список авторов",
             description="Возвращает список всех авторов.")
 async def get_authors(session: AsyncSession = Depends(get_async_session)):
     result = await session.execute(select(Author))
@@ -25,7 +27,9 @@ async def get_authors(session: AsyncSession = Depends(get_async_session)):
     return authors
 
 
-@router.post("/", response_model=AuthorCreateResponse, summary="Создать нового автора",
+@router.post("/",
+             response_model=AuthorCreateResponse,
+             summary="Создать нового автора",
              description="Создает нового автора с заданными параметрами.")
 async def create_author(author: AuthorCreate, session: AsyncSession = Depends(get_async_session)):
     try:
@@ -38,8 +42,10 @@ async def create_author(author: AuthorCreate, session: AsyncSession = Depends(ge
         return HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Author already exists")
 
 
-@router.get("/{author_id}", response_model=AuthorCreateResponse, summary="Получить автора по ID",
-            description="Возвращает информацию об авторе по его ID.")
+@router.get("/{author_id}",
+            response_model=AuthorCreateResponse,
+            summary="Получить автора по ID",
+            description="Возвращает информацию об авторе по его ID.\n`author_id`: UUID4")
 async def get_author(author_id: int, session: AsyncSession = Depends(get_async_session)):
     result = await session.execute(select(Author).where(Author.id == author_id))
     author = result.scalars().first()
@@ -48,8 +54,10 @@ async def get_author(author_id: int, session: AsyncSession = Depends(get_async_s
     return author
 
 
-@router.put("/{author_id}", response_model=AuthorCreateResponse, summary="Обновить информацию об авторе",
-            description="Обновляет информацию об авторе с заданным ID.")
+@router.put("/{author_id}",
+            response_model=AuthorCreateResponse,
+            summary="Обновить информацию об авторе",
+            description="Обновляет информацию об авторе с заданным ID.\n`author_id`: UUID4")
 async def update_author(author_id: int, author_update: AuthorUpdate,
                         session: AsyncSession = Depends(get_async_session)):
     result = await session.execute(select(Author).where(Author.id == author_id))
@@ -68,8 +76,10 @@ async def update_author(author_id: int, author_update: AuthorUpdate,
     return author
 
 
-@router.delete("/{author_id}", response_model=dict, summary="Удалить автора",
-               description="Удаляет автора с заданным ID.")
+@router.delete("/{author_id}",
+               response_model=dict,
+               summary="Удалить автора",
+               description="Удаляет автора с заданным ID.\n`author_id`: UUID4")
 async def delete_author(author_id: int, session: AsyncSession = Depends(get_async_session)):
     result = await session.execute(select(Author).where(Author.id == author_id))
     author = result.scalars().first()
