@@ -36,7 +36,7 @@ class Book(Base):
     __tablename__ = 'book'
 
     id: Mapped[UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid4)
-    title: Mapped[str] = mapped_column(nullable=False, unique=True)
+    title: Mapped[str] = mapped_column(nullable=False)
     genre: Mapped[BookGenre] = mapped_column()
     author_id: Mapped[UUID] = mapped_column(ForeignKey("author.id"), nullable=False)
     count: Mapped[int] = mapped_column()
