@@ -6,10 +6,8 @@ from sqlalchemy.dialects.postgresql import UUID
 from uuid import uuid4
 
 from enum import Enum
-from fastapi import APIRouter
 
 logger = logging.getLogger(__name__)
-router = APIRouter(prefix="/api/books", tags=["books"])
 
 class Base(DeclarativeBase):
     pass

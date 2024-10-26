@@ -75,7 +75,7 @@ async def get_authors(session: AsyncSession = Depends(get_async_session)):
              description="Создает нового автора с заданными параметрами")
 async def create_author(author: AuthorCreate, session: AsyncSession = Depends(get_async_session)):
     try:
-        new_author = Author(**author.dict())
+        new_author = Author(**author.model_dump())
         session.add(new_author)
         await session.commit()
         await session.refresh(new_author)
@@ -107,7 +107,7 @@ async def update_author(author_id: UUID4, author_update: AuthorUpdate,
     if author is None:
         return HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Author not found")
 
-    for key, value in author_update.dict(exclude_unset=True).items():
+    for key, value in author_update.model_dump(exclude_unset=True).items():
         setattr(author, key, value)
 
     try:
@@ -122,7 +122,7 @@ async def update_author(author_id: UUID4, author_update: AuthorUpdate,
                response_model=AuthorDeleteResponse,
                summary="Удалить автора",
                description="Удаляет автора с заданным ID.")
-async def delete_author(author_id: int, session: AsyncSession = Depends(get_async_session)):
+async def delete_author(author_id: UUID4, session: AsyncSession = Depends(get_async_session)):
     result = await session.execute(select(Author).where(Author.id == author_id))
     author = result.scalars().first()
     if author is None:

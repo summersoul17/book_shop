@@ -1,4 +1,5 @@
 import logging
+import traceback
 from typing import AsyncGenerator
 
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, AsyncSession, AsyncEngine
@@ -21,5 +22,8 @@ async def get_async_session() -> AsyncGenerator[AsyncSession, None]:
 
 async def create_tables():
     async with async_engine.begin() as connection:
-        await connection.run_sync(Base.metadata.create_all)
-        await connection.commit()
+        try:
+            await connection.run_sync(Base.metadata.create_all)
+            await connection.commit()
+        except:
+            print(traceback.format_exc())

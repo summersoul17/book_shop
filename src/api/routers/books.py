@@ -50,7 +50,7 @@ async def bulk_data(data: List[BookCreate], session: AsyncSession = Depends(get_
                     select(Author).where(
                         Author.id == book.author_id))).scalars().first()
                 if is_author_exists is not None:
-                    new_book = Book(**book.dict())
+                    new_book = Book(**book.model_dump())
                     session.add(new_book)
                 else:
                     pass
@@ -83,7 +83,7 @@ async def get_books(session: AsyncSession = Depends(get_async_session)):
              description="Создает новую книгу с заданными параметрами")
 async def create_book(book: BookCreate, session: AsyncSession = Depends(get_async_session)):
     try:
-        new_book = Book(**book.dict())
+        new_book = Book(**book.model_dump())
         session.add(new_book)
         await session.commit()
         await session.refresh(new_book)
@@ -115,7 +115,7 @@ async def update_book(book_id: int, book_update: BookUpdate, session: AsyncSessi
     if book is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Book not found")
 
-    for key, value in book_update.dict(exclude_unset=True).items():
+    for key, value in book_update.model_dump(exclude_unset=True).items():
         setattr(book, key, value)
     try:
         await session.commit()
